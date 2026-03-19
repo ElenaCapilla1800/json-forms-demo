@@ -1,0 +1,54 @@
+services:
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: jf_php
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - jf_network
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: jf_nginx
+    ports:
+      - "8088:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - jf_network
+
+  db:
+    image: mysql:8.0
+    container_name: jf_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: json_forms
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3306:3306"
+    volumes:
+      - jf_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uapp", "-papp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - jf_network
+
+volumes:
+  jf_mysql_data:
+
+networks:
+  jf_network:
+    driver: bridge

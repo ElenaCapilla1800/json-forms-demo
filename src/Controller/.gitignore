@@ -1,0 +1,14 @@
+
+###> symfony ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.pem
+/public/bundles/
+/var/
+/vendor/
+###< symfony ###
+
+###> docker ###
+docker-compose.override.yml
+###< docker ###
