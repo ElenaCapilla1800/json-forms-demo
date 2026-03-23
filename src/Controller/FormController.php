@@ -14,7 +14,7 @@ class FormController extends AbstractController
         private readonly JsonFormBuilder $formBuilder,
     ) {}
 
-    #[Route('/formulario', name: 'app_form', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'app_form', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
     {
         $form = $this->formBuilder->buildFromSchema(
@@ -26,7 +26,7 @@ class FormController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Aquí podrías guardar los datos en la base de datos o realizar otras acciones
+            // Aquí podemos guardar los datos en la base de datos o realizar otras acciones
             $this->addFlash('success', '¡Formulario enviado correctamente!');
 
             return $this->redirectToRoute('app_form');
